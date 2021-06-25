@@ -1,0 +1,32 @@
+Question 1:
+When the landlord wants to enter the room they signal that they are present
+and call Wait() on an in blocking and out blocking mutex
+The first thing a student does after getting in the door is check if
+the landlord is present, if so, they Wait() on the appropriate blocking mutex
+before doing so they free the door mutex assuring that the landlord is allowed in
+Only once the landlord is done checking does the in blocking mutex get Signaled
+This signal tells a student that was pushed out of the door that they may
+get back in the door and continue their entry
+
+Question 2:
+When a student enters the room that had 0 students in it, they flip a 
+clear mutex to 0
+When a student leaves the room that had 1 student in it, they flip a
+clear mutex to 1
+after the landlord declares that the room needs to be empty, he allows
+students to leave but not enter, he then waits on the clear mutex
+followed by signaling it. This means he can only progress after the
+last student leaves and sets the mutex to 1, he then makes sure it
+remains at 1 after he leaves as to allow for the first student to enter
+to then set it back to 0 without halting
+
+Question 3:
+The students are aware of how many students exist
+When the landlord is ready to retire he allows all students to 
+enter and exit. Entering students will instantly die
+The landlord then waits on a retirement mutex that starts at 0
+this means the landlord must wait till the mutex is singaled
+When a student dies they increase a death counter
+If a student dies and the death counter is equal to total students
+they signal the retirement mutex which then frees the landlord
+to retire.
